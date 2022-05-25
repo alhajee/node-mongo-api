@@ -9,3 +9,6 @@ package-lock.json
 
 # environment variables
 .env
+
+# database files
+data

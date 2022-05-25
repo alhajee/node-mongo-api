@@ -43,7 +43,7 @@ class UsersController {
   }
 
   async removeUser(req: express.Request, res: express.Response) {
-    log(await usersService.deleteById(req.body.id));
+    log(await usersService.deleteUserById(req.body.id));
     res.status(204).send();
   }
 }
