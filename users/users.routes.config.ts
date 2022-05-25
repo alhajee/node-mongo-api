@@ -1,7 +1,10 @@
+import express from "express";
+
 import { CommonRoutesConfig } from "../common/common.routes.config";
 import UsersController from "./controllers/users.controller";
 import UsersMiddleware from "./middleware/users.middleware";
-import express from "express";
+import BodyValidationMiddleware from "../common/middleware/body.validation.middleware";
+import { body } from "express-validator";
 
 export class UsersRoutes extends CommonRoutesConfig {
   constructor(app: express.Application) {
@@ -13,7 +16,11 @@ export class UsersRoutes extends CommonRoutesConfig {
       .route(`/users`)
       .get(UsersController.listUsers)
       .post(
-        UsersMiddleware.validateRequiredUserBodyFields,
+        body("email").isEmail(),
+        body("password")
+          .isLength({ min: 8 })
+          .withMessage("Must include password (8+ characters)"),
+        BodyValidationMiddleware.verifyBodyFieldsErrors,
         UsersMiddleware.validateSameEmailDoesntExist,
         UsersController.createUser
       );
@@ -26,12 +33,28 @@ export class UsersRoutes extends CommonRoutesConfig {
       .delete(UsersController.removeUser);
 
     this.app.put(`/users/:userId`, [
-      UsersMiddleware.validateRequiredUserBodyFields,
+      body("email").isEmail(),
+      body("password")
+        .isLength({ min: 8 })
+        .withMessage("Must include password (8+ characters)"),
+      body("firstName").isString(),
+      body("lastName").isString(),
+      body("permissionFlags").isInt(),
+      BodyValidationMiddleware.verifyBodyFieldsErrors,
       UsersMiddleware.validateSameEmailBelongToSameUser,
       UsersController.put,
     ]);
 
     this.app.patch(`/users/:userId`, [
+      body("email").isEmail().optional(),
+      body("password")
+        .isLength({ min: 8 })
+        .withMessage("Must include password (8+ characters)")
+        .optional(),
+      body("firstName").isString().optional(),
+      body("lastName").isString().optional(),
+      body("permissionFlags").isInt().optional(),
+      BodyValidationMiddleware.verifyBodyFieldsErrors,
       UsersMiddleware.validatePatchEmail,
       UsersController.patch,
     ]);
