@@ -3,6 +3,7 @@ import { CRUD } from "../../common/interfaces/crud.interface";
 import { CreateUserDto } from "../dto/create.user.dto";
 import { PutUserDto } from "../dto/put.user.dto";
 import { PatchUserDto } from "../dto/patch.user.dto";
+import { Exchange } from "../../common/types/exchange";
 
 class UsersService implements CRUD {
   async create(resource: CreateUserDto) {
@@ -35,6 +36,10 @@ class UsersService implements CRUD {
 
   async getUserByEmailWithPassword(email: string) {
     return UsersDao.getUserByEmailWithPassword(email);
+  }
+
+  async addExchangeToUser(userId: string, exchange: Exchange) {
+    return UsersDao.addExchangeToUser(userId, exchange);
   }
 }
 

@@ -82,6 +82,14 @@ class UsersDao {
   async deleteUserById(userId: string) {
     return this.User.deleteOne({ _id: userId }).exec();
   }
+
+  async addExchangeToUser(userId: string, exchange: Exchange) {
+    return this.User.findOneAndUpdate(
+      { _id: userId },
+      { $push: { exchanges: exchange } },
+      { new: true }
+    ).exec();
+  }
 }
 
 export default new UsersDao();

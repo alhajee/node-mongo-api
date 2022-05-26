@@ -56,6 +56,11 @@ class UsersController {
     log(await usersService.patchById(req.body.id, patchUserDto));
     res.status(204).send();
   }
+
+  async addExchanges(req: express.Request, res: express.Response) {
+    log(await usersService.addExchangeToUser(req.body.id, req.body.exchange));
+    res.status(204).send();
+  }
 }
 
 export default new UsersController();
