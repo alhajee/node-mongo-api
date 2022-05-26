@@ -4,6 +4,7 @@ if (dotenvResult.error) {
   throw dotenvResult.error;
 }
 
+import helmet from "helmet";
 import express from "express";
 import * as http from "http";
 import * as winston from "winston";
@@ -16,9 +17,12 @@ import { AuthRoutes } from "./auth/auth.routes.config";
 
 const app: express.Application = express();
 const server: http.Server = http.createServer(app);
-const port = 3000;
+const port = process.env.EXPRESS_PORT;
 const routes: Array<CommonRoutesConfig> = [];
 const debugLog: debug.IDebugger = debug("app");
+
+// use helmet to secure Express headers
+app.use(helmet());
 
 // here we are adding middleware to parse all incoming requests as JSON
 app.use(express.json());
