@@ -2,6 +2,7 @@ import { CreateUserDto } from "../dto/create.user.dto";
 import { PatchUserDto } from "../dto/patch.user.dto";
 import { PutUserDto } from "../dto/put.user.dto";
 import mongooseService from "../../common/services/mongoose.service";
+import { PermissionFlag } from "../../common/middleware/common.permissionFlag.enum";
 
 import shortid from "shortid";
 import debug from "debug";
@@ -37,7 +38,7 @@ class UsersDao {
     const user = new this.User({
       _id: userId,
       ...userFields,
-      permissionFlags: 1,
+      permissionFlags: PermissionFlag.UNVERIFIED_PERMISSION,
     });
     await user.save();
     return {
