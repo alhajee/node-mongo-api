@@ -3,6 +3,7 @@ import { PatchUserDto } from "../dto/patch.user.dto";
 import { PutUserDto } from "../dto/put.user.dto";
 import mongooseService from "../../common/services/mongoose.service";
 import { PermissionFlag } from "../../common/middleware/common.permissionFlag.enum";
+import { Exchange } from "../../common/types/exchange";
 
 import shortid from "shortid";
 import debug from "debug";
@@ -22,6 +23,7 @@ class UsersDao {
       },
       firstName: String,
       lastName: String,
+      exchanges: [] as Exchange[],
       permissionFlags: Number,
     },
     { id: false }
