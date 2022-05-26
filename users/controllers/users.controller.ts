@@ -4,6 +4,8 @@ import express from "express";
 // we import our newly created user services
 import usersService from "../services/users.service";
 
+import { PatchUserDto } from "../dto/patch.user.dto";
+
 // we import the argon2 library for password hashing
 import argon2 from "argon2";
 
@@ -25,7 +27,7 @@ class UsersController {
   async createUser(req: express.Request, res: express.Response) {
     req.body.password = await argon2.hash(req.body.password);
     const userId = await usersService.create(req.body);
-    res.status(200).send(userId);
+    res.status(201).send(userId);
   }
 
   async patch(req: express.Request, res: express.Response) {
@@ -44,6 +46,14 @@ class UsersController {
 
   async removeUser(req: express.Request, res: express.Response) {
     log(await usersService.deleteUserById(req.body.id));
+    res.status(204).send();
+  }
+
+  async updatePermissionFlags(req: express.Request, res: express.Response) {
+    const patchUserDto: PatchUserDto = {
+      permissionFlags: parseInt(req.params.permissionFlags),
+    };
+    log(await usersService.patchById(req.body.id, patchUserDto));
     res.status(204).send();
   }
 }

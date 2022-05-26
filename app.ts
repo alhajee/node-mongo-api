@@ -1,6 +1,11 @@
+import dotenv from "dotenv";
+const dotenvResult = dotenv.config();
+if (dotenvResult.error) {
+  throw dotenvResult.error;
+}
+
 import express from "express";
 import * as http from "http";
-
 import * as winston from "winston";
 import * as expressWinston from "express-winston";
 import cors from "cors";
@@ -8,12 +13,6 @@ import { CommonRoutesConfig } from "./common/common.routes.config";
 import { UsersRoutes } from "./users/users.routes.config";
 import debug from "debug";
 import { AuthRoutes } from "./auth/auth.routes.config";
-
-import dotenv from "dotenv";
-const dotenvResult = dotenv.config();
-if (dotenvResult.error) {
-  throw dotenvResult.error;
-}
 
 const app: express.Application = express();
 const server: http.Server = http.createServer(app);
@@ -41,7 +40,7 @@ const loggerOptions: expressWinston.LoggerOptions = {
 if (!process.env.DEBUG) {
   loggerOptions.meta = false; // when not debugging, log requests as one-liners
   if (typeof global.it === "function") {
-    loggerOptions.levels = "http"; // for non-debug test runs, squelch entirely
+    loggerOptions.level = "http"; // for non-debug test runs, squelch entirely
   }
 }
 
@@ -59,7 +58,7 @@ app.get("/", (req: express.Request, res: express.Response) => {
   res.status(200).send(runningMessage);
 });
 
-server.listen(port, () => {
+export default server.listen(port, () => {
   routes.forEach((route: CommonRoutesConfig) => {
     debugLog(`Routes configured for ${route.getName()}`);
   });

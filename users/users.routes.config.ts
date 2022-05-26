@@ -56,11 +56,11 @@ export class UsersRoutes extends CommonRoutesConfig {
       body("permissionFlags").isInt(),
       BodyValidationMiddleware.verifyBodyFieldsErrors,
       UsersMiddleware.validateSameEmailBelongToSameUser,
-      UsersController.put,
       UsersMiddleware.userCantChangePermission,
       permissionMiddleware.permissionFlagRequired(
         PermissionFlag.VERIFIED_PERMISSION
       ),
+      UsersController.put,
     ]);
 
     this.app.patch(`/users/:userId`, [
@@ -74,11 +74,25 @@ export class UsersRoutes extends CommonRoutesConfig {
       body("permissionFlags").isInt().optional(),
       BodyValidationMiddleware.verifyBodyFieldsErrors,
       UsersMiddleware.validatePatchEmail,
-      UsersController.patch,
       UsersMiddleware.userCantChangePermission,
       permissionMiddleware.permissionFlagRequired(
         PermissionFlag.VERIFIED_PERMISSION
       ),
+      UsersController.patch,
+    ]);
+
+    this.app.put(`/users/:userId/permissionFlags/:permissionFlags`, [
+      jwtMiddleware.validJWTNeeded,
+      permissionMiddleware.onlySameUserOrAdminCanDoThisAction,
+
+      // Note: The above two pieces of middleware are needed despite
+      // the reference to them in the .all() call, because that only covers
+      // /users/:userId, not anything beneath it in the hierarchy
+
+      permissionMiddleware.permissionFlagRequired(
+        PermissionFlag.UNVERIFIED_PERMISSION
+      ),
+      UsersController.updatePermissionFlags,
     ]);
 
     return this.app;

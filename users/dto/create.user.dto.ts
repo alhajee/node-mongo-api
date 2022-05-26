@@ -6,4 +6,3 @@ export interface CreateUserDto {
   lastName?: string;
   permissionLevel?: number;
 }
-
