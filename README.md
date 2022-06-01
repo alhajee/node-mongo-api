@@ -1,4 +1,4 @@
-# Deelabot API v2
+# Node Mongo API
 
 1. Run `npm i` to install dependencies.
 2. Run `sudo docker-compose up -d` to get a MongoDB instance running.
